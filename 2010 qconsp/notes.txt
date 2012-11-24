@@ -1,0 +1,198 @@
+= agradecimentos
+
+
+
+= simplicity
+hoje em dia, existe muita complexidade acidental em linguagens e arquiteturas
+
+já não conseguimos mais tolerar tanto disperdício 
+
+
+= revolution
+Chegamos a consenso que é a melhor maneira de desenvolver software? -->
+            
+ou algumas práticas são tão amplamente adotadas, que deixamos de ter abilidade para ver seus custos e limitações?
+
+
+
+maioria das linguages parecidas, como carros diferentes na mesma estrada
+
+talvez estejamos indo no caminho errado
+
+
+= pauta
+vou falar sobre 4 tecnologias que considero importante, e tendência.
+cada uma pode ser uma quebra de paradigma, dependendo da experiência pévia de cada um
+
+
+
+= protagonists
+criador do clojure,
+e responsável pela dissemenição dos padrões cqrs + event sourcing na forma que vou apresentar
+
+estão causando transformação, cada um em uma escala: linguagem + arquitetura
+
+
+= state
+existe um tema em comum elementar, que é a nossa falha em lidar com estado
+
+
+
+= there is no mutable object
+
+mesmo que seja confortável, não representa  a realidade
+
+é conveniente, não ter que analyzar coisas enquanto tempo procede
+
+
+= dali
+o entendimento do moderno sobre tempo mudou bastante com física quantica e relatividade
+
+dali era fascinado por fisica quantica e relatividade
+
+
+= terms
+alguns termos que definem esse modelo da realidae.
+
+
+
+= enlightment
+precisamos deste tipo de modelo para termos lógica sem as coisas estarem mudando por baixo dos panos.
+
+é comum misturar esses conceitos, o que adiciona complexidade, pior que as vezes é disfarçado como simplicidade.
+
+percepção é massivalente paralela, não querer coordenação
+
+
+
+pode ser que não seja um problema hoje, mas eventualmente não vamos conseguir manter esse modelo errada da realidade.
+
+
+
+= bullets
+
+existe um disconexo entre o mundo e a nossa percepção dele
+
+não podemos assumir que podemos controlar o mundo
+não acontece na realidade
+
+
+
+
+
+
+
+=language
+
+como ferramenta elementar, ela guia nossas abstrações e modelagens do mundo.
+
+existem diversos bons princípios, mas foram esquecidos ou não chegaram as linguagens do dia-a-dia
+
+precisamos evoluir.
+no mesmo sentido, que foi uma boa evolução de C++ para java, com GC
+
+linguages populares possuem modelo rudimenar do mundo real,
+
+e não abordam a noção de tempo de forma explícita,
+
+assumem uma linha do tempo compartilhada entre todos objetos.
+
+
+contrato escondido: quem pode mudar?
+
+existem muitos bons princípios que foram perdidos, mas precisamos resgatar.
+
+
+
+= clojure
+
+linguagem funcional pragmática, impura, com modelo sano sobre tempo e estado
+todo as estruturas de dados padrão são imutáveis
+
+
+compilado para bytecode
+
+10/2007
+
+
+dá suporte para concorrência na linguagem
+
+não é como as outras lisp: muitas diferenças, muitas melhorias.
+
+
+feature:
+não é orientado a objeto, mas utiliza todos os princípios que as pessoas normalmente associam somente com OO.
+
+funcional
+===
+
+mais legivel
+
+permite melhores programas sendo escritos
+
+quando temos concorrencia, aí sim fica mais ainda claro a vantagem!
+
+
+
+
+= ddd
+quem usa?
+
+esses conceitos não estão em conflito com linguagem funcional
+
+
+
+= event sourcing
+no site do martin fowler desde de 2005
+mas vamos usar para todas as entidades 
+
+vai permitir integração de um domínio funcional com o resto dos componentes do sistema
+
+história tem mais valor do que só o snapshot atual
+
+estado atual é derivado
+
+
+
+
+= common 3-tier
+
+não é esquisito usarmos a mesma arquitetura para qualquer domínio?
+
+pessoas assume que é a resposta para tudo
+
+mas esqueceram qual era a pergunta.
+
+será que isso não dificulda uma boa modelagem do domínio?
+   
+
+= problems
+não é sobre escalabilidade, existe o problema de escalabilidade
+
+
+
+
+= cqrs
+evolução do cqs de 88 para linguagem imperativa
+para arquitetura
+
+
+impacto no modelo de domínio
+
+permite melhor modelagem, dado a nova liberdade e menos responsabilidade
+
+simplificamos o modelo de domínio
+
+
+
+
+
+state - 12min
+clojure - 10min
+event sourcing - 5min
+cep - 10min
+cqrs - 10min
+remarks - 3min
+
+
+

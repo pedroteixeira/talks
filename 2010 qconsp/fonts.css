@@ -1,0 +1,12 @@
+@font-face {
+  font-family: 'Droid Sans Mono';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Droid Sans Mono'), url('droid-mono') format('truetype');
+}
+@font-face {
+  font-family: 'Droid Sans';
+  font-style: normal;
+  font-weight: normal;
+  src: local('Droid Sans'), url('droid-sans') format('truetype');
+}

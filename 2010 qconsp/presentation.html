@@ -1,0 +1,2244 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <!--[if gte IE 9]>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <![endif]--> 
+    
+    <!--[if lt IE 9]>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge;chrome=1" />
+        <![endif]-->
+    
+    <meta charset="utf-8" /> 
+    <title>DDDD with Clojure and Complex Event Processing presentation</title> 
+    <link href="fonts.css" rel="stylesheet" type="text/css" />
+    <link href="presentation.css" rel="stylesheet" type="text/css" />
+    
+    <link href="syntaxhighlighter/styles/shPpt.css" type="text/css" rel="stylesheet" />
+    <link href="syntaxhighlighter/styles/shThemePpt.css" type="text/css" rel="stylesheet" />
+    
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shCore.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushClojure.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJScript.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushSql.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushRuby.js"></script>
+    <script type="text/javascript" src="syntaxhighlighter/scripts/shBrushJava.js"></script>        
+    <script type="text/javascript">
+      SyntaxHighlighter.config.tagName = "code";
+      SyntaxHighlighter.config.toolbar = false;
+      SyntaxHighlighter.defaults['ruler'] = false;
+      SyntaxHighlighter.defaults['gutter'] = false;
+      SyntaxHighlighter.defaults['toolbar'] = false;      
+      SyntaxHighlighter.all();
+    </script>   
+  </head>
+
+  <!--TODO:
+      aumentar fonts
+      aumentar área de slide
+      
+  -->
+  
+  <body>
+    <div class="presentation"> 
+      <div id="presentation-counter"></div> 
+      <div class="slides">
+
+        <div class="slide"> 
+          <style type="text/css"> 
+            .intro h1, .intro h2 {
+            color: black;
+            }
+            .intro h1 {
+            letter-spacing: -2px;
+            font-size: 96px;
+            }
+            .intro h2 {
+            margin-top: -5px;
+            font-size: 40px;
+            letter-spacing: -1px;
+            }
+          </style>
+          
+          <section class="middle intro"> 
+            <hgroup> 
+              <h1>DDDD*</h1> 
+              <h2>
+                with Clojure and Complex Event Processing               
+              </h2> 
+            </hgroup> 
+            <p>*featuring Command / Query Responsability Segregation and Event Sourcing</p>
+
+            <p>pedro@<b><a href="http://intelie.com.br">intelie.com.br</a></b>
+            <br/><a href="http://twitter.com/pedroteixeira">@pedroteixeira</a></p>
+
+
+          <center>
+            <em>
+          presented at <a href="http://www.qconsp.com/palestra/pedro-teixeira/linguagens-funcionais-e-processamento-de-eventos">QConSP</a>  12/09/2010
+            </em>
+          </center>            
+          </section>
+
+
+        </div>
+        
+
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Something is wrong...</h1> -->
+        <!--   </header> -->
+        <!-- </div> -->
+              
+        
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>OO? 3-tier?</h1> -->
+        <!--   </header>           -->
+        <!--   <div class="notes"> -->
+        <!--     perguntar: -->
+        <!--     OO?  -->
+
+        <!--     maioria das linguagens -->
+        <!--     single-dispatch, stateful OO com classes, herança, GC, métodos, etc.. -->
+
+        <!--     "all different cars, but on the same road" -->
+            
+        <!--     DDD? three-tier arquitect? -->
+        <!--     DTO, DAL, BL, Façace, BD. -->
+
+        <!--     os fundamentos básicos em como software é desenvolvido não mudou em mais de 30 anos -->
+        <!--     quote do uncle bob? -->
+
+        <!--   </div> -->
+        <!-- </div> -->
+
+
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Is this it?</h1> -->
+        <!--   </header> -->
+          
+        <!--   <div class="notes"> -->
+        <!-- adicionar nota em slides sober common arch e OO -->
+        
+        <!--     Chegamos a consenso que é a melhor maneira de desenvolver software? -->
+            
+        <!--     ou algumas práticas são tão amplamente adotadas, que será que deixamos de ter abilidade para ver seus custos e limitações? -->
+
+        <!--     talvez estejamos dirindo no caminho errado -->
+        <!--   </div> -->
+        <!-- </div> -->
+
+        
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Cultural Assumptions</h1> -->
+        <!--   </header> -->
+
+        <!--   <div class="notes"> -->
+            
+        <!--     por algum motivo, entramos na indústria e existe um viés cultural para certa soluções: -->
+        <!--     por vendors, universidade, etc. -->
+        <!--     pessoas assumem como boas práticas, e poucos questionam. -->
+
+        <!--     acustumados? -->
+
+            
+        <!--     pedi para dar uma passo atrás em relação a linguagem e a arquitetura. -->
+            
+            
+        <!--     provocar? -->
+        <!--     old habits die hard -->
+        <!--     http://a7.vox.com/6a00cd96fc16084cd500e3989f99870004-320pi -->
+
+        <!--     http://elev8.com/files/2010/07/think-outside-the-box.jpg -->
+        <!--     http://sha3teely.com/wp-content/uploads/2006/08/box.jpg -->
+        <!--   </div> -->
+        <!-- </div> -->
+          
+        
+
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Old ideas turned fresh</h1> -->
+        <!--   </header> -->
+          
+        <!--   <div class="notes"> -->
+        <!--     lisp ~ 50 -->
+        <!--     event sourcing ~ 70 -->
+
+            
+        <!--     a lot of old ideas are re-surging, -->
+        <!--     but repackaged. -->
+            
+        <!--     nossa geração, que começou a programar uns 15 anos atrás, não conhecem muitas delas. -->
+            
+        <!--     Ali quote: sobre experience. -->
+        <!--   </div> -->
+        <!-- </div> -->
+
+
+        
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Process and Reality</h1> -->
+        <!--   </header> -->
+
+        <!--   <div class="notes"> -->
+        <!--     #fail -->
+        <!--     cannot have logic on top of rivers -->
+        <!--     to reason -->
+        <!--     perception of values. -->
+
+
+        <!--     there is a disconnect between the world, and our percepton of it -->
+        <!--     there is no live -->
+        <!--     we do not get to stop the world (matrix image) -->
+
+        <!--     perception is massively paralle and requires no coordination -->
+        <!--     "this is not message passing" -->
+
+            
+        <!--     we make decisions all the time based on the past. -->
+        <!--   </div> -->
+        <!-- </div> -->
+
+        
+
+        
+
+
+        
+        <div class="slide">
+          <section>
+            <blockquote><p>Seek simplicity, and distrust it.</p></blockquote>
+            <cite>Alfred North Whitehead</cite>
+          </section>
+            
+          <div class="notes">
+            bigger problems
+            more data
+            more cores
+
+            
+            incidental complexity both in languages and in system architecture
+            becomes evident waste that we can not bear
+            
+
+            a lot of incidental complexity disguised as 'simplicity' or superficial stuff
+            
+            for too many programmers, surface syntax
+            
+            quote: não é tão importante aprender rápido uma linguagem ou tecnologia, mas que seja simples depois de aprender.
+          </div>
+        </div>
+        
+        <div class="slide">
+          <section>
+            <blockquote><p>Every generation needs a new revolution.</p></blockquote>
+            <cite>Thomas Jefferson</cite>
+
+            <!-- <img src="images/Prise_de_la_Bastille.jpg" width="500px"/> -->
+          </section>
+
+          <div class="notes">
+            devemos nos questions se já resolvemos tudo
+            
+          </div>
+        </div>
+        
+        
+        <div class="slide">
+          <img src="images/change-management1.jpg" style="opacity:0.1; position:absolute;" />
+          <!-- <header> -->
+          <!--   <ul> -->
+          <!--     <li>language </li> -->
+          <!--     <li>architecture</li> -->
+          <!--     <li>complex event processing</li> -->
+          <!--   </ul> -->
+          <!-- </header> -->
+          <code class="brush: clojure">
+              (-> clojure
+                  event sourcing
+                  cep
+                  cqrs)
+            </code>
+          <section class="middle">
+            <!-- <img src="images/calvin-hobbes-path.jpg" /> -->
+          </section>
+        </div>
+
+
+
+        
+
+        <div class="slide">
+          <header>
+            <h1>Protagonists of the day</h1>
+          </header>
+          <!-- <code class="brush: clojure"> -->
+          <!--   (def protagonists) -->
+          <!-- </code> -->
+          
+          <section class="middle">
+            <figure>
+              <img src="images/rich.png" width="40%" />
+              <figcaption>Rich Hickey</figcaption>
+            </figure>
+            
+            <figure>
+              <img src="images/gregyoung.png" title="Greg" width="35%" />
+              <figcaption>Greg Young</figcaption>
+            </figure>
+          </section>
+
+          <div class="notes">
+            outras pessoas: udi dahan
+            vem liderando transformação
+          </div>
+        </div>
+
+
+        <div class="slide">
+
+          <center>
+            <img src="images/state-fail.jpg" height="90%" />
+          </center>
+
+        </div>
+
+
+        
+
+        <div class="slide">
+          <header>
+            <h1>the illusion of motion</h1>
+            <h2>example</h2>
+          </header>
+
+          <section class="middle">
+            <img src="images/Animexample.gif" />
+            <p>
+            series of still frames
+            <br />
+            <img src="images/Animexample3edit.png" />
+            </p>
+
+
+            <!-- <img src="images/StopMotionAnimation.jpg" /> -->
+
+          </section>
+        </div>
+
+
+        
+
+
+
+        <div class="slide">
+          <!-- <header> -->
+          <!--   <h1><span class="html">epic fail</span> <span class="">state</span> </h1> -->
+          <!-- </header> -->
+
+          <section>
+            <blockquote><p>There is no such thing such as mutable object.</p></blockquote>
+            <cite>Alfred North Whitehead</cite>
+
+
+          </section>
+            <p>
+              <img src="images/statue-fail.jpg" style="opacity:0.6" />
+            </p>          
+          
+          <div class="notes">
+            
+            values are critical to perception and decision making
+
+            
+
+            
+            users are used to it, all world is.
+            data of 10 minutes ago does not change
+            
+
+
+
+            can't stop the "race"
+
+            much easier to treat as values, it's nice
+            do not have to handle things while time proceed!
+
+            we need and want these kind of model
+            where we can have our logic
+            without things changing beneth you
+
+            
+            things happen at the same time, now.
+
+
+            things don't change in place
+            if time is a dimension
+            
+
+            
+            future is a function of the past
+
+
+            "no man can cross the same rive twice"
+
+            river is all in the mind.
+
+            time as illusion.
+
+            mesmo que seja confortável, e que pareça ser sim, não representa a realidade.
+
+            there is no changing values.
+
+            a value doesn't change
+
+
+            human mental model super-posição para criar objetos
+            mas objetos não mudam.
+
+            causalidade.
+
+            OO
+            "setMonth is a crazy concept"
+
+            classes and settable as default has destroyed our brains
+
+            
+            we want multiple timelines
+
+            we have multiple users
+            
+            we need to deal with it
+
+            -- can't afford to assume we can control the world (by locking), or we alone in the world (ignore it)
+
+            we need to deal with async
+            
+          </div>
+        </div>
+        
+
+
+                <div class="slide">
+          <!-- <header> -->
+          <!--   <h1>the general illusion of change</h1> -->
+          <!-- </header> -->
+
+
+            <!-- <img src="images/salvador-dali-explosion.jpg" /> -->
+            <img src="images/DisintegrationofPersistence.jpg" width="100%" height="105%"  />
+
+
+          <div class="notes">
+            time as relative an discrete
+            quantum and relativitity
+          </div>
+          
+        </div>
+
+
+        <div class="slide">
+          <style type="text/css">
+            .list {
+            font-size: 40px;
+            }
+            .list span {
+            font-weight: bold;
+            }
+            .list p {
+            font-size: 40px;
+            font-weight: normal;
+            color: gray;
+            padding: 0 0 0 20px;
+            }
+          </style>
+                      
+
+            <ul class="list">
+              <li><span>value</span> <p>immutable data </p></li>
+              <li><span>identity</span> <p>logical entity associated with series of values over time</p> </li>
+              <li><span>state</span> <p>value of identity at a point in time</p></li>
+            </ul>
+            
+            <!-- <blockquote><p>An identity is an entity that has a state, which is its value at a point in time. And a value is something that doesn't change.</p></blockquote> -->
+            <!-- <cite>Rich Hickey</cite>             -->
+
+ 
+            <!-- illustrate identity, entity and values. -->
+            <!-- easy to see when -->
+            <!-- time is a dimension -->
+
+        </div>        
+
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Values, Identity and State</h1> -->
+        <!--   </header> -->
+
+        <!--   <div class="notes"> -->
+        <!-- indirection saves the day         -->
+
+        <!--     value = quantity, number, or any immutable composition -->
+
+        <!--     identity = -->
+        <!--     logical entity with series of values over time. -->
+        <!--     is a derived notion -->
+
+        <!--     state = value of an identity at a time, snapshot. -->
+
+        <!--     time = sempre relative -->
+        <!--   </div> -->
+        <!-- </div> -->        
+
+
+
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>lost wisdoms</h1> -->
+        <!--   </header> -->
+
+        <!--   <section> -->
+        <!--     Use value objects when possible. -->
+
+        <!--     Favor immutability. -->
+        <!--     Joshua Bloch, -->
+        <!--     Effective Java -->
+
+        <!--   </section> -->
+        <!-- </div> -->
+
+
+        
+        <div class="slide">
+          <header>
+            <h1>enlightenment</h1>
+          </header>
+
+          <section>
+            <ul class="bullets">
+              <li><b>Need</b> <span class="html">immutability</span> to manage state and time</li>
+              <li><span class="key">Actions</span> and <span class="css">perceptions</span> are distinct things</li>
+              <!-- <li>Perception is always of the past</li> -->
+              <li>One does not stop the world</li>
+            </ul>
+
+            <p style="float:right">
+              <img src="images/250px-World_line.svg.png" style="opacity:0.4" />
+            </p>
+          </section>
+          
+          <div class="notes">
+            não é possível tomar ação sobre snapshot
+
+            relacionar com Pirsig dynamic x static?
+            
+            <ul>
+              <li>Need to separate the concept of values and change</li>
+              <li>Accept we reason over past data: we can't freeze the world</li>
+            </ul>
+              
+            Need immutability to manage State and Time. the only sound way.
+            variables need to ref to values.
+
+            separate concept of values and change
+            
+            por isso que, mutable object não faz sentido.
+            
+            Dada essa restrição.
+
+           
+            cqrs + event sourcing.
+            mas sem linguagem apropriada, solução ainda é melhor, pois filosofia da linguagem combina.
+
+
+            for local process:
+            clojure, rich hickey.
+            mas não resolve para sistemas distribuídos.
+            
+
+            e cep to the rescue.
+            processamentos de eventos nessa arquitetura é essencial
+            especialmente para implementar processos de negócio
+
+
+            
+            =&gt; disclamer sobre pq não erlang?
+            - nem sempre queremos serializar
+            - queremos compartilhar estado, ás vezes, entre vários cores por ex. nada de errado com isso.
+            - queremos ter flexibilidade de uma solução com componentes possivelmente heterogenos.
+          </div>
+        </div>
+
+
+        <div class="slide">
+          <header>
+            <h1>locking requires superpowers</h1>
+          </header>
+          
+          <section>
+          <img src="images/neo-bullets.jpg" width="100%"/>
+          </section>
+
+          <div class="notes">
+            não vai ser mais possível, congelar o mundo ou assumir que pode ser feito.
+            muitos cores, muitos usuários
+          </div>
+        </div>        
+
+
+        
+
+        <!-- <div class="slide"> -->
+        <!--   cannot make decisions over changing things -->
+        <!--   <img src="images/time-juggling.jpg" /> -->
+        <!-- </div> -->
+        
+
+        
+
+        
+        <div class="slide">
+          <header>
+            <h1>Language matters</h1>
+          </header>
+          <section>
+            <blockquote><p>Progress is possible only if we train ourselves to think about programs without thinking of them as pieces of executable code.</p></blockquote>
+            <cite>Edsger Dijkstra</cite>
+          </section>
+
+          <div class="notes">
+            se interessado em modelar problemas do mundo real
+            
+          deve ser amparado sobre um filosofia coerente sobre realidade
+
+          falar que bons princípios de OO não são encontrados em nenhum das linguagems modernas: java, c#, c++, ruby.
+
+          imperative programming and mutating objects need to be avoided!
+
+          todos todos os bons princípios de OO permanecem, mesmo com essas restrições:
+          polymorfismo, encapsulamento, modularização e re-uso
+          
+
+
+
+          
+          Though OOP came from many
+          motivations, two were central.
+          ... [T]he small scale one was to
+          find a more flexible version
+          of assignment, and then to
+          try to eliminate it altogether.
+
+          a better module scheme for
+          complex systems involving
+          hiding of details
+          
+            traditional OO makes think of composites as something other than values
+            ".. you're doomed" -- rich hickey
+
+
+            major problem:
+            conflated symbolic reference (identity) with actual entities.
+
+            "the idea of the thing is that thing"
+            
+            
+            traditional variables are not suitable
+            pq não modelam tempo e nem coordenam mudança
+            - lock with mutex
+            
+            object systems are very simplistic models of the real world
+            no notion of time
+            presume a shared timeline
+
+            - hidden contracts with C++: memory management, impede library usage
+            - hidden contracts with OO (Java, C#, Ruby, etc...) : time / state management
+            não é um problema de concorrência!
+            não sabemos quando tempos um valor estável, no idea who is affected.            
+          </div>
+        </div>
+
+
+
+        <div class="slide">
+          <section class="middle">
+            <video controls width="960" height="540" >
+              <source src="videos/jedi_unlearn.mp4" />
+            </video>
+          </section>
+        </div>
+        
+        
+        <div class="slide">
+          <header>
+            <h1>Why Clojure?</h1>
+          </header>
+
+          <div class="notes">
+            higher-order functions is not all that we need
+            
+            immutability is even more important
+            
+            for sanity preserving
+            clojure é unica linguagem funcional pragmática onde todos os objetos são imutáveis
+
+          </div>
+          
+          <section>
+            <ul class="bullets">
+              <li><span class="key">state</span> managed right</li>
+              <li><span class="key">functional</span></li>              
+              <li><span class="key">lisp</span></li>                            
+              <li><span class="key">hosted</span> &nbsp; JVM / CLR</li>
+            </ul>
+
+            <h1>also relevant:</h1>
+            <ul class="bullets">
+              <li><span class="key">dynamic</span>
+              <div style="float:right;">
+                <img src="images/OSI-Approved-License-100x137.png" />
+              </div>                            
+              </li>
+              <li><span class="key">great community</span></li>
+            </ul>            
+            
+          <div class="notes">
+            <ul>
+              <li>
+                motivate you to write side-effect free functions, and use immutable structures for defualt
+              but allow you to go outiside on your own, if you want.</li>
+              <li>Change is just a function takes on value and returns another. Old is fine.</li>
+              <li>uniform state transition model</li>
+              <li>STM with MVCC</li> 
+            </ul>            
+          </div>
+
+          </section>
+        </div>
+        
+
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Lisp </h1> -->
+        <!--   </header> -->
+        <!--   <section class="middle"> -->
+        <!--   <img src="images/lisp_cycles.png" width="100%" /> -->
+        <!--   </section> -->
+        <!-- </div> -->
+        
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Lisp</h1> -->
+        <!--   </header> -->
+          
+        <!--   <section> -->
+        <!--     <\!-- <img src="images/lisp-table.png" /> -\-> -->
+
+        <!--     <style> -->
+        <!--       #lisp table td { -->
+        <!--       text-align: center; -->
+        <!--       } -->
+        <!--     </style> -->
+        <!--     <table id="lisp"> -->
+        <!--       <thead> -->
+        <!--         <tr> -->
+        <!--           <th>feature</th> -->
+        <!--           <th style="width:120px; padding: 0;">industry norm</th> -->
+        <!--           <th style="width:120px; padding: 0 0 0 30px">cool kids</th> -->
+        <!--           <th style="width:120px; padding: 0 0 0 30px">lisp</th>                     -->
+        <!--         </tr> -->
+        <!--       </thead> -->
+        <!--       <tbody> -->
+        <!--       <tr> -->
+        <!--         <td>conditionals</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       <tr> -->
+        <!--         <td>variables</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       <tr> -->
+        <!--         <td>garbage collection</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       <tr> -->
+        <!--         <td>recursion</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       <tr> -->
+        <!--         <td>function type</td> -->
+        <!--         <td></td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       <tr> -->
+        <!--         <td>symbol type</td> -->
+        <!--         <td></td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       <tr> -->
+        <!--         <td>AST language available</td> -->
+        <!--         <td></td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       <tr> -->
+        <!--         <td><b>everything's an expression</b></td> -->
+        <!--         <td></td> -->
+        <!--         <td></td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       <tr> -->
+        <!--         <td><b>homoiconicity</b></td> -->
+        <!--         <td></td> -->
+        <!--         <td></td> -->
+        <!--         <td>&#10004;</td> -->
+        <!--       </tr> -->
+        <!--       </tbody> -->
+        <!--     </table> -->
+            
+        <!--   </section> -->
+        <!-- </div> -->
+
+        
+        <div class="slide">
+          <div class="notes">
+            uniform syntax
+            declarations, controls, function calls, operators all just list with op in the front.
+          </div>
+          <section class="middle" >
+            <table style="font-size:18px">
+              <thead>
+                <tr>
+                  <th>Java / C#</th>
+                  <th>Clojure</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td><code class="brush: java">int i = 5;</code></td>
+                <td><code class="brush: clojure">(def i 5)</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code class="brush: java">
+                  if(x == 0)
+                    return y;
+                 else
+                    return z;</code></td>
+                <td><code class="brush: clojure">(if (zero? x) y z)</code></td>
+              </tr>
+              <tr>
+                <td><code class="brush: java">x * y * z;</code></td>
+                <td><code class="brush: clojure">(* x y z)</code>
+                </td>
+              </tr>
+              <tr>
+                <td><code class="brush: java">foo(x, y, z);</code></td>
+                <td><code class="brush: clojure">(foo x y z)</code>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </section>
+        </div>
+
+        <!-- <div class="slide"> -->
+        <!--   <section class="middle"> -->
+        <!--     <img src="images/lisp-evaluation.jpg" /> -->
+        <!--   </section> -->
+        <!-- </div>                 -->
+
+        <div class="slide">
+          <header>
+            <h1><em>efficient</em> Persistent Data Structures</h1>
+            <h2>immutable, cheap modified copies, structural sharing</h2>
+          </header>
+          <br /><br /><br />
+          <section>
+            <style>              
+              #persistent th:nth-child(2) {
+              padding: 0 0 0 80px;
+              }
+              #persistent td:nth-child(2) {
+              padding: 0 0 0 80px;
+              font-size: 26px;
+              }
+              #persistent td:nth-child(1) {
+              font-size: 50px;
+
+              }              
+            </style>
+            <table id="persistent">
+              <thead>
+                <tr>
+                  <th>type</th>
+                  <th>example</th>
+                </tr>
+              </thead>
+              <tbody>
+              <tr>
+                <td>list</td>
+                <td><code class="brush: clojure">(1 2 3)</code>
+                </td>
+              </tr>
+              <tr>
+                <td>vector</td>
+                <td><code class="brush: clojure">[1 2 3]</code>
+                </td>
+              </tr>
+              <tr>
+                <td>map</td>
+                <td><code class="brush: clojure">
+                  {:key "value"}</code>
+                </td>
+              </tr>
+              <tr>
+                <td>set</td>
+                <td><code class="brush: clojure">#{:a :b}</code>
+                </td>
+              </tr>              
+              </tbody>
+            </table>
+          </section>
+        </div>
+
+
+            <!-- (def hat  (ref ["rabbit"])) -->
+            <!-- (def tray (ref [])) -->
+            
+            <!-- (dosync -->
+            <!--    (alter hat  pop) -->
+            <!--    (alter tray conj "rabbit"))         -->
+            
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Clojure managed references illustration</h1> -->
+        <!--   </header> -->
+
+        <!--   <div class="notes"> -->
+        <!--     only things that mutate, with specific semantics -->
+        <!--     reference is an identity that references to its value -->
+
+        <!--     "box" illustration -->
+        <!--     comparar com tipical OO -->
+        <!--   </div> -->
+        <!-- </div> -->
+
+        
+       
+        
+        <div class="slide">
+          <header>
+            <h1>Functional programming</h1>
+            <h2>first-order, higher-order, atemporal</h2>
+          </header>
+          <br /><br /><br />
+
+
+          <section>
+          <code class="brush: clojure">
+            
+            > (reduce + (map count ["o" "oo"]))
+            3
+
+            
+            (defn palindrome? [s]
+              (or (<= (count s) 1)
+                (and (= (first s) (last s))
+                  (palindrome? (rest (butlast s))))))
+
+            > (palindrome? "noon")
+            true
+          </code>
+          </section>
+          
+          <div class="notes">
+            
+            melhor unidade não é objeto ou classe, mas funções.
+            especialmente, pure functions.
+
+            contraste com imperativo
+
+            lazy!
+            
+            easy to understand, change, test, compose.
+            shorted coded.
+
+            they should be the bricks.            
+
+
+            pure functions:
+            depend only of arguments
+            have no notion of time
+
+            
+            a ton of benefits!
+            independent, de concorrência
+            mais modular, mais fácil de testar, mais de fácil de entender
+
+            
+            melhora drasticamente a vida de um desenvolvedor
+            torna muitas coisas fáceis!
+            simples, expressiva e elegante
+          </div>
+        </div>        
+
+        <div class="slide">
+          <header>
+            <h1>Managed references</h1>
+          </header>
+
+          <section style="font-size: 30px">
+            <center>
+            typical OO (Identity + State conflated) <br/>
+          <img src="images/stateoo.png" />
+          <br />
+            ref is an indirection <br/>          
+          <img src="images/refs.png" />
+          <br />
+           atomic change <br/>                    
+          <img src="images/refswap.png" />          
+
+            </center>
+          </section>
+        </div>
+        
+        <div class="slide">
+          <header>
+            <h1>Software Transaction Management</h1>
+          </header>
+
+          <section>
+          <code class="brush: clojure">
+            (def room-light (ref {:on true}))
+            (def door-light (ref {:on false}))
+
+            (dosync
+               (alter room-light assoc :on false)
+               (alter door-light assoc :on true))
+               
+
+          </code>
+          </section>
+        </div>
+
+        
+
+        <div class="slide">
+          <header>
+            <h1>JVM Interop</h1>
+          </header>
+
+          <section>
+            <code class="brush: clojure">
+              (System/currentTimeMillis)
+            </code>
+
+            <hr/>
+            
+            <code class="brush: clojure">            
+              
+              (def stop-words #{"the"})
+              
+              (take 10 (remove stop-words
+                         (.split #"\s+"
+                           (slurp "words.txt"))))
+
+              
+            </code>
+          </section>
+
+          <div class="notes">
+            (doto (new java.util.HashMap)
+            (.put "a" 1) (.put "b" 2))
+          </div>
+        </div>
+
+
+
+        
+
+
+        <div class="slide">
+          <header>
+            <h1>Domain Driven Design</h1>
+
+          </header>
+
+          <section>
+            <img src="images/ddd-mindmap.png" width="100%" />                      
+          </section>
+
+
+          <div class="notes">
+            modelos só fazem sentido em contextos
+
+            aggregate root é a unidade de distribuição, de integridade.
+
+            transação, etc.
+            
+            parte do domínio, só precisamos de 1 query: buscar AR
+          </div>
+        </div>
+
+        <div class="slide">
+          <header>
+            <h1>Domain model <span style="font-size:28px"><em>powered by</em></span> Clojure</h1>
+
+
+            <img src="images/clojure-icon.gif" style="vertical-align:top; margin: 0 0 0 200px" />
+
+          </header>
+
+          <section>
+            <ul class="bullets">
+              <li><b>Functions</b> map to domain <b>behaviours</b></li>
+              <li><span class="key">defrecord</span> for entities</li>                            
+              <li>Polymorphism with <span class="key">multimethods</span> and <span class="key">protocols</span></li>
+              <li>Namespaces for modularization</li>              
+              <li>Encapsulation with closures (and <em>private</em>)</li>
+              <li>DSLs are mundane</li>
+              <li><b>Easier</b> to test, reason, reuse</li>
+            </ul>
+          </section>
+        </div>        
+
+
+
+        <div class="slide">
+
+          <section>
+            <div style="float:left; width:40%">
+              <img src="images/principles.gif" />
+            </div>
+
+            <ul class="bullets" style="float:left; width:55%">
+              <li>Not sufficient to solve one dimensions of software design</li>
+              <li>Need a distributed system architecture for most applications</li>
+            </ul>
+          </section>
+
+          <div class="notes">
+            imagem unindo clojure + cqrs
+
+            unir lutas, visão holística
+            duas escalas da solução: arquitetura do sistema e linguagem para programa
+            bons princípios devem habitar todas escalas da solução
+
+            <img src="images/jigsaw-puzzle-in_hands.jpg" />
+
+            clojure for the domain logic
+
+            circular arquitecture for distributed system                        
+          </div>
+        </div>
+        
+
+        <div class="slide">
+          <header>
+            <h1>Event Sourcing</h1>
+            <h2>to the rescue</h2>
+          </header>
+
+          <section>
+            <center>
+            <img src="images/Event-Sourcing-klein.png" />
+            </center>
+
+            <ul class="bullets">
+              <li><span class="key">Event</span> <em>immutable</em> record that captures a <span class=""><b>state transition</b></span></li>
+
+
+              <li>associated with an <b>aggregate root</b></li>
+              
+              <li>current state derived by replaying events</li>
+            </ul>
+
+            <!-- <div style="float:right"> -->
+            <!--   <code class="brush: clojure"> -->
+            <!--     (defrecord DomainEvent []) -->
+            <!--   </code> -->
+            <!-- </div> -->
+          </section>
+
+          <div class="notes">
+            event streams !
+            
+              Any model can be created from the original behaviours that occured
+
+              capturamos intenções originais
+              permite qualquer tipo de analytics
+              para qualquer cenário
+            
+            
+            event is a value that captures a state transition
+
+            recover state by reading events and applying to AR in domain
+
+            mature business models use some of these concepts:
+            accounting, banks: saldo é derivado, não pode apagar.
+            
+
+            como concertamos um erro:
+            outro evento que corrige
+            
+
+            mais informação,
+            imenso valor para negócio
+            
+            
+            o valor de saber tudo que acontece não tem preço
+
+            se guardar apenas uma visão estruturada do último estado
+            muitas vezes requisitos aparecem depois, e é necessário muito esforço para implementar por caso de uso.
+
+            não custa ter isso como default
+          </div>
+        </div>
+        
+
+
+        
+        <div class="slide">
+          <section>
+            <img src="images/eventsourcing-ex1.png" width="100%" height="130px"/>
+
+            <ul class="bullets">
+              <li><b>Everything</b> that happened is stored</li>
+              <li>Event store is write-once</li>
+            </ul>
+
+            <div style="font-size: 13px; margin: 120px 0 0 0">    
+          <code class="brush: clojure">
+            (with-event-sourcing
+             (publish-for (aggregate-root "cart")
+                          :ItemAdded {:id 123
+                                      :quantity 1}))
+          </code>
+            </div>
+          </section>
+          
+          
+          <div class="notes">
+            replay of events para recupar stado atual
+            aplicamos resultado dos comandos, não os comando em si.
+          </div>
+        </div>
+
+        <div class="slide">
+          <header>
+            <h1>Tremendous business value</h1>
+          </header>
+          
+          <section>
+            <center>
+              <img src="images/happy-business-man.jpg" height="80%"/>
+            </center>
+          </section>
+        </div>
+        
+        
+        <div class="slide">
+          <header>
+            <h1>Event Store</h1>
+            <h2>can be as simple as...</h2>
+          </header>
+
+          <section>
+            <div style="float:right">
+              <img src="images/diagrams/eventstore.png"/>
+            </div>
+
+            <br /><br /><br /><br /><br />
+            <ul class="summary">
+              <li>Just <b>serialize</b> it!
+                <ul><li><span class="key">json</span></li>
+                <li><span class="key">xml</span></li>
+                <li><span class="key">protobuf</span>, etc...</li></ul>
+              </li>
+            </ul>
+
+            <code class="brush: js">
+              {
+                name : "ItemAdded",
+                id : 123, quantity : 1
+              }
+            </code>            
+            
+          </section>
+        </div>
+        
+        
+
+
+
+
+        <div class="slide">
+          <header>
+            <h1>Event handlers</h1>
+          </header>
+
+          
+          <!-- <img src="images/flying.png" /> -->
+          <!-- http://www.flickr.com/photos/visbeek/2524382851/ -->
+          
+          <section>
+            <!--              -->
+
+            <!-- <img src="images/arch.png" /> -->
+            <!-- http://www.flickr.com/photos/jbarry5/3038672259/sizes/z/in/photostream/ -->
+          
+            <!-- <ul class="bullets"> -->
+            <!--   <li>event handlers are functions of current of state aggregate and produce new state</li> -->
+            <!-- </ul> -->
+
+            <code class="brush: clojure">
+              (defn add-item [cart id]
+                (update-in cart [:items] conj id))
+
+                
+              (defn event-handler [cart added-evt]
+                (add-item cart (:id added-evt))
+                  
+            </code>
+
+<br /> <br />
+
+            <div style="font-size: 12px">
+              <code class="brush: clojure">
+                ;test example
+                (describe "handler for Item Added Event"
+                 (given "an empty cart" [cart {}]
+                  (it "should return cart with added item"
+                   (= (event-handler cart {:id 1}) {:items [1]}))))
+              </code>
+            </div>
+            
+          </section>
+          
+          <div class="notes">
+            more emphasis on verbs, behaviours than nouns (types)
+            
+            eric evans quote:
+            event sourcing is the bridge for building real-life programs.
+
+            allows functional program to emit events, that compose the entire system.
+          </div>          
+        </div>
+
+
+                
+
+
+       <div class="slide">
+        <img src="images/jigsaw-puzzle-in_hands.jpg" width="100%"/>
+       </div>
+
+       <div class="slide">
+
+           <center>
+             <img src="images/cep.png" />
+           </center>
+
+         <div class="notes">
+           queries são contínuas
+
+           fluxo de dados
+           
+           baixa latência
+           
+           processar eventos para handlers
+           implementar sagas em domain
+         </div>
+       </div>
+
+
+       <div class="slide">
+         <header>
+           <h1>CEP with Esper</h1>
+         </header>
+         <div style="float:right; align: right; text-align: right;">
+           <img src="images/espertech_logo_transparent.png" /> <br />
+           <img src="images/OSI-Approved-License-100x137.png" width="60px" />           
+         </div>
+         
+         <section class="wide" style="font-size:12px;">
+           <span class="key">Clojure</span>           
+
+             <code class="brush: clojure">
+               (.initialize (EPServiceProviderManager/getDefaultProvider))
+             </code>
+
+
+           <br />           <br />         
+
+           <span class="key">JRuby</span>
+           <code class="brush: ruby">
+             service = EPServiceProviderManager.getDefaultProvider
+             service.initialize
+           </code>
+
+           <br /> <br />           <br /> <br />
+           <ul class="bullets">
+             <li><b>embedded</b></li>
+             <li>low-latency</li>
+             <li>extensible</li>
+           </ul>
+
+         </section>
+       </div>
+
+       
+       
+
+       <div class="slide">
+         <header>
+           <h1><span class="html">Esper</span>Event representation</h1>
+           <h2>
+           An event is an immutable record of a past occurrence of state change
+           </h2>           
+         </header>
+
+         <section>
+           <br /><br /><br/>
+
+            <!-- <table> -->
+            <!--   <thead> -->
+            <!--     <tr> -->
+            <!--       <th>class</th> -->
+            <!--       <th>description</th> -->
+            <!--     </tr> -->
+            <!--   </thead> -->
+            <!--   <tbody> -->
+            <!--   <tr> -->
+            <!--     <td>java.lang.Object</td> -->
+            <!--     <td>Any Java POJO -->
+            <!--     </td> -->
+            <!--   </tr> -->
+            <!--   <tr> -->
+            <!--     <td>java.util.Map</td> -->
+            <!--     <td>Can contain nested objects, further Map and arrays thereof. -->
+            <!--     </td> -->
+            <!--   </tr> -->
+            <!--   <tr> -->
+            <!--     <td>org.w3c.dom.Node</td> -->
+            <!--     <td>XML DOM -->
+            <!--     </td> -->
+            <!--   </tr> -->
+            <!--   <tr> -->
+            <!--     <td>custom class</td> -->
+            <!--     <td>Plug-in event representation -->
+            <!--     </td> -->
+            <!--   </tr>               -->
+            <!--   </tbody> -->
+            <!-- </table> -->
+
+            <div style="padding: 20px 0; font-size: 15px">
+              <code class="brush: clojure">
+                (.sendEvent
+                  (.getEPRuntime (service))
+                    {"id" 123
+                     "quantity" 1} "ItemAdded")
+              </code>
+            </div>
+
+
+            <br /> <br /> <br />
+            <h2>event has an event type, which can derive from supertypes
+            
+            </h2>
+
+         </section>
+            
+         <div class="notes">
+                ;clojure record impl. java.util.Map
+                (defrecord DomainEvent [])           
+
+                
+           eventos são tipos
+           map event types tem relação de super types.
+
+           [Event Type]<>-supertypes0..*>[Event Type]
+           [Event Type]-defines-[Event]           
+         </div>
+         
+       </div>
+       
+              
+
+       
+       <div class="slide">
+         <header>
+           <h1><span class="html">Esper</span>Event Processing Language (EPL)</h1>           
+         </header>
+
+
+         <section class="wide" style="font-size:14px">
+           <style>
+             hr {
+             margin : 50px 0;
+             }
+           </style>
+           <code class="brush: sql">             
+             select * from OrderCreated
+           </code>
+
+           <hr />
+           
+           <code class="brush: sql">                        
+             on OrderEvent 
+               insert into LargeOrders
+                           select * where orderQty >= 100
+               insert into SmallOrders select *
+           </code>
+
+           <hr />           
+
+           <code class="brush: sql">             
+             select * from MarketData
+              where price > (select max(price) from
+                 MarketData(symbol='GOOG').std:lastevent())               
+           </code>
+         </section>
+       </div>
+       
+
+       <div class="slide">
+         <header>
+           <h1><span class="html">CEP</span>Complex patterns</h1>
+         </header>
+
+         <section class="wide" style="font-size:14px">
+           <code class="brush: sql">
+             select * from pattern
+              [every a=Checkin -> 
+               (OutOfOrder(term.id=a.term.id) and not 
+                (Cancelled(term.id=a.term.id) or
+                  Completed(term.id=a.term.id)))]
+           </code>
+
+           <hr />
+           
+           <code class="brush: sql">
+             select 'terminal 1 is offline' from pattern 
+             [every timer:interval(60 sec)
+                    -> (timer:interval(65 sec)
+                    and not Status(term.id = 'T1'))]
+             output first every 5 minutes
+           </code>
+         </section>
+           
+       </div>
+       
+
+       <!-- <div class="slide"> -->
+       <!--   <header> -->
+       <!--     <h1><span class="html">CEP</span>Sagas</h1> -->
+       <!--   </header> -->
+
+       <!--   <section class="wide">          -->
+       <!--     <code class="brush: sql"> -->
+       <!--       on SLAStarted after 1h min              -->
+       <!--     </code>                       -->
+
+       <!--     <code class="brush: sql"> -->
+       <!--       OrderCreated -> not within 10min OrderCancelled              -->
+       <!--     </code>                       -->
+
+       <!--     <code class="brush: sql"> -->
+       <!--       on Tweet uid =fulado, uid=sicrano, contain hash, em 10min              -->
+       <!--     </code> -->
+       <!--   </section> -->
+       <!-- </div> -->
+
+
+       <div class="slide">
+         <header>
+           <h1><span class="html">CEP</span>Leverage its power!</h1>
+         </header>
+
+         <section>
+         <ul class="bullets">
+           <li><span class="key">Sagas</span> long-running business processes</li>           
+           <li>filtering and aggregating for event listeners</li>
+         </ul>
+         </section>
+       </div>
+
+
+
+
+
+
+        
+
+        <div class="slide">
+
+          <header>
+            <h1>Common <br /> layered <br /> architecture</h1>
+          </header>
+
+          <center>
+            <img src="images/diagrams/3-tier.png" />
+          </center>
+
+          
+          <div class="notes">
+            All businesses can be treated the same from the perspective of software. ??
+
+            pq a mesma arquitetura é usada em todos os domínio?
+
+            apontar ORM, DTOs, Remote Façade
+
+            mudança formulário papel para dado
+            mais de um usuário, muda tudo, porém ficaram modelos antigos.            
+          </div>
+        </div>
+
+        
+        <!-- <div class="slide"> -->
+        <!--   <center> -->
+        <!--     <img src="images/42.gif" height="100%"/> -->
+        <!--   </center> -->
+        <!-- </div> -->
+
+        
+        <div class="slide">
+          <section>
+            <blockquote><p>Sometimes the problem is to discover what the problem is.</p></blockquote>
+            <cite>Gordon Glegg [1969], The Design of Design</cite>
+          </section>
+        </div>        
+
+                
+        <div class="slide">
+          <div style="float:left; width: 120px; padding: 20px">
+              <img src="images/diagrams/layered-architecture-bl-top.png" height="700px" />
+          </div>
+
+          <center class="title">
+            Problems
+          </center>
+
+              
+          <section class="right">
+              
+
+
+            <ul class="bullets">
+              <li>User intentions <b>not</b> captured</li>
+              
+              <li>Perception and state changes are conflated</li>
+
+              <li>Poor change management
+              <ul>
+                <li><em>last one wins</em> is <b>unacceptable</b></li>
+              </ul>
+              </li>
+              <li>Not fit for multi-user applications</li>
+              <li>Too much accidental complexity</li>
+            </ul>
+          </section>
+
+          
+          <div class="notes">
+            principles, got mixed up with architecture template.
+
+            besides, all scalability issues
+            
+            common distributed architecture is not suitable
+
+            data driven
+            
+            pq não modelam tempo, e não capturam as inteções de mundança e
+            são incapazes de coordenar mudança
+            - optimistic locking in db
+
+            it's also impossible to do domain driven design over this:
+            - transacional script over objects
+            - no behaviour, only data (edit data only)
+
+            BD is used to lock, how to scale? buy more DBs.
+
+            - usado para tudo, código igual, mesma arquitetura para qualquer sistema,
+            - abstração cara para BD, normalmente.
+            
+            tendência a gerar meta-sistemas
+            vendors recomendam? microsoft and oracle?
+
+            - lost all verbs
+            - lost of user intentions
+            (need to reverse enginnering to figure it out)
+
+            editing an entity makes no sense to the business
+            (ex: corrigir endereço ou mudar endereço)
+
+            aberração.
+
+            desenvolvedores são caros, não há desculpa para desperdícios desse tipo.
+          </div>
+        </div>
+        
+        
+
+        <div class="slide">
+          <header>
+            <h1><span class="">Data</span> x <span class="">Domain</span> Driven</h1>
+          </header>
+
+          <section>
+            <ul class="bullets">
+              <li>Transactional script over object model</li>
+              
+              <li><em>Not even</em> anemic domain model
+              <ul>             
+                <li>Only nouns</li>
+                <li>Where are the verbs in your domain?</li>
+                <li><span class="key">CRUD</span> makes no business sense</li>
+                
+              </ul></li>
+                <li><b>Anti-Patterns</b>
+                <ul><li>setters in your domain model</li>
+                <li>getters in your domain model</li>
+                </ul></li>              
+            </ul>                          
+
+          </section>
+
+          <div class="notes">
+            exclusivo. 
+            
+            editing an entity makes no sense to the business
+            (ex: corrigir endereço ou mudar endereço)
+
+            mais do que simples mismatch: pq tentamos colocar entidade atrás de tudo? e dizer que está modelando o negócio?
+            
+
+            ex: twitter
+            lista há 10 minutos atrás
+          </div>
+        </div>
+        
+
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>It's an asynchronous world</h1> -->
+        <!--   </header> -->
+
+        <!--   <section> -->
+        <!--     <ul class="bullets"> -->
+        <!--       <li>Users are ok with stale data</li> -->
+              
+        <!--       <li>Users want to know about domain events</li> -->
+
+        <!--       <li>UI is part of the solution</li> -->
+        <!--     </ul> -->
+        <!--   </section> -->
+        <!-- </div> -->
+          
+        <div class="slide">
+          <img src="images/dont_panic.jpg" width="101%" />
+        </div>
+                  
+
+                    
+        <div class="slide">
+          <header>
+            <h1>Command and Query Responsibility Segregation (CQRS)</h1>
+          </header>
+
+          <br />          <br /><br /><br />
+          <section class="middle">
+            <center>
+              <img src="images/diagrams/cqrs.png" />
+            </center>
+          </section>
+
+          <div class="notes">
+            não é novo.. oltp x analytics,
+            bertrand meyer, etc.
+
+            realização que precisamos tomar decisões difernetes para necessidades diferentes.
+
+            
+
+            
+            
+            conceito simples:
+            
+            foco em separação de modelo
+            
+            separar em duas partes:
+            com diferença de responsabilidade
+            - a nivel de serviço
+            
+
+            usar o mesmo modelo é sub-optiomal para esse dois casos
+            se for pelo menos caminho, não é possivel..
+
+            possuem necessidades diferentes
+            
+            deve ser considerado um anti-pattern usar o mesmo para esse dois casos
+          </div>
+        </div>
+        
+
+        <div class="slide">
+          <header>
+            <h1>Commands</h1>
+          </header>
+
+          <section class="left" style="width:200px">
+            <img src="images/diagrams/write-model.png" height="550px" />          
+          </section>
+          
+          <section class="right">
+            
+            <ul class="bullets">
+              <li>Captures the user intented action</li>
+              <li><b>Request</b> to <em>change</em> state</li>
+              <li>Promotes handling concurrency according to use case</li>
+              <li>Benefits of <b>async</b> programming
+              <ul>
+                <li>Freedom for better domain solutions</li>
+                <li>Motivates better user experience</li>
+              </ul>
+              </li>
+            </ul>
+          </section>
+          
+
+          <div class="notes">
+            princípio conhecido
+            
+            comandos capturam intenção do usuário
+            em princípio, não retornam valor
+
+            benefits of async programming
+            "me avise, quando tiver solução"
+            
+            
+            não é necessário expor dados do modelo domínio, nem é necessário conter todos os dados
+            que são usados para exibição
+
+            o modelo deve ser write-only
+
+            nova liberdade, permite resolver melhor problemas do domínio
+
+            role of Domain Models?
+
+            only maintain what you need.
+
+            do not need anymore to store everything in it anymore
+
+
+            Users Do Things
+            save user x register user
+          </div>
+        </div>
+         
+
+        
+
+        <div class="slide">
+          <header>
+            <h1>Queries</h1>            
+          </header>
+          
+          <section class="left" style="width:200px">
+            <img src="images/diagrams/read-model.png" height="500px" />            
+          </section>
+          
+          <section class="right">
+            
+            <ul class="bullets">
+              <li><b>Keep it simple</b></li>
+              <li>Use the most efficient way for data retrieval</li>
+              <li>No impedance mismatch</li>
+            </ul>
+          </section>
+
+          
+          <div class="notes">
+            - no impedeance, no orm, domain model não processa queries
+            - just data, use whatever is more efficient
+            
+            deve ser muito simples, e barato de ser feito
+            = se não, pessoas precisam ser especialistas no domain, no data model, e no ORM.
+            = muita bagagem para tarefas simples.
+
+            queremos que seja direto para UI
+
+            nada de errado em utilizar SQL, ou simples wrapper
+            node4j, mongodb, couchdb
+
+            attempting to tune orm is needless, expensive
+            prefetch-paths are code smells, expensive
+            
+            talvez menos tempo ou menos, mas mais barato e mais eficiente.
+
+            extra layers of cache é complexidade acidental..
+          </div>
+        </div>
+         
+        
+
+        <div class="slide">
+          <header>
+            <h1>Brewer's CAP theorem</h1>
+            <h2>can pick only 2</h2>
+          </header>
+
+          <br />          <br />
+          
+          <section class="middle">
+            <img src="images/diagrams/cap.png" />
+          </section>
+        </div>
+
+
+
+        
+
+        
+
+
+
+        <div class="slide">
+          <header>
+            <h1>Distributed Domain Driven Design</h1>
+            <h2>CQRS + Event Sourcing</h2>
+          </header>
+          <br />          <br />
+
+          <section>
+            <img src="images/CQRS-architecture.png" width="700px" style="position:absolute;" />
+
+            <div style="float:right; width:250px;">
+              <ul class="summary">
+                <li>System integration is built-in</li>
+                <li>Easy to parallelize development</li>
+                <li>reminiscient of MVC, but with two models                </li>
+              </ul>
+            </div>
+          </section>
+          
+          <div class="notes">
+
+            
+            
+            podem evoluir separadamente
+            contratos são explícitos
+            facilita desenvelvimento
+
+            podemos escalar leitura, dois caminhos, mais escolhas
+
+            comandos no impertativo
+            eventos no passado
+
+            same good principles are maintained
+            but layers != tiers
+
+            most important thing users/customers do:
+            queries
+            commands
+
+            have nothing to do with entities.
+            model only with entities seem deficient.
+
+          </div>
+        </div>
+
+        <div class="slide">
+          <header>
+            <h1>Tremendous business value</h1>
+          </header>
+          
+          <section>
+            <center>
+              <img src="images/happy-business-man.jpg" height="80%"/>
+            </center>
+          </section>
+        </div>
+
+
+        <div class="slide">
+          <header>
+            <h1>Circular architecture</h1>
+            <h2>related to Cockburn's hexagonal architecture</h2>
+          </header>
+
+          <br />          <br />          <br /><br />
+          <section class="middle">
+            <img src="images/Circular-Architecture-klein.png" width="750px" />
+          </section>
+        </div>
+        
+        
+
+       <!-- <div class="slide"> -->
+       <!--   <header> -->
+       <!--     <h1>State in Esper Statements</h1> -->
+       <!--   </header> -->
+       <!--   <section> -->
+       <!--     isolation runtime can be used to recover state of statements, using previous events from event store -->
+       <!--   </section> -->
+       <!-- </div> -->
+       
+
+       <!-- <div class="slide"> -->
+       <!--    <header> -->
+       <!--      <h1>Distributed system architecture</h1> -->
+       <!--    </header> -->
+
+       <!--    <section> -->
+       <!--      events and commands as messages -->
+       <!--      broker, pub/sub -->
+       <!--    </section> -->
+          
+       <!--    <div class="notes"> -->
+       <!--      json as representation, for ex. -->
+       <!--      http for protocol, for ex. -->
+       <!--    </div> -->
+       <!-- </div> -->
+
+         
+        
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>UI</h1> -->
+
+        <!--     <div class="notes"> -->
+        <!--       part of solution -->
+              
+        <!--       capturing intent -->
+        <!--       drive better solutions, better systems -->
+        <!--       more value -->
+
+        <!--       precisamos ter task-UI para ter DDD -->
+        <!--       se não, será anêmico ou sem verbos, sem comportamento. -->
+
+        <!--       example: trade hard problems for simpler ones, -->
+        <!--       airplane ticket reservation -->
+              
+        <!--     </div> -->
+        <!--   </header> -->
+        <!-- </div> -->
+
+
+
+
+        <div class="slide">
+
+          <img src="images/diagrams/cqrs-example.png" width="100%" />
+
+
+          <div class="notes">
+            add clojure in domain
+            and esper in domain and in handlers
+          </div>          
+        </div>
+
+        <!-- <div class="slide"> -->
+        <!--   <section> -->
+        <!--     <code class="brush: clojure"> -->
+        <!--       (defcommand CreateIncident) -->
+
+        <!--       (execute  -->
+        <!--         (command CreateIncident))               -->
+        <!--     </code> -->
+        <!--   </section> -->
+        <!-- </div>       -->
+
+        
+
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Happier ending</h1> -->
+        <!--   </header> -->
+
+        <!--   <div class="notes"> -->
+        <!--     no need for ORM -->
+        <!--     no need for AOP -->
+        <!--     no need for IoC containers -->
+
+        <!--     DSLs are natural -->
+            
+        <!--     sound state story -->
+        <!--     a lot of business value baked in -->
+            
+        <!--     can sleep better and night -->
+        <!--   </div> -->
+        <!-- </div> -->
+        
+        
+
+        <div class="slide">
+          <section>
+            <blockquote><p>Doing the <span class="key">right thing</span> is more important than doing the thing right.</p></blockquote>
+            <cite>Peter Drucker</cite>
+          </section>
+
+          <div class="notes">
+            pensamento lean: value + success, business is king.
+            vc está sendo responsável? usando melhoras ferramentas?
+            talvez seja hora de atualizar seu toolbox
+
+            não adianta usar a definição de "certo" de uma caixa que possui muitos defeitos
+          </div>
+        </div>
+
+
+
+        
+        <!-- <div class="slide"> -->
+        <!--   <header> -->
+        <!--     <h1>Lean software development</h1> -->
+        <!--   </header> -->
+
+        <!--   <div class="notes"> -->
+        <!--     desenvolvedores, ás vezes, estão sendo parte do problema e não da solução. -->
+
+        <!--     seja responsável, o mais importante é o sucesso do projeto que vc está trabalhando. -->
+         
+        <!--     não é por motivos técnicos -->
+        <!--     não é, somente, por questão de escalar e alta-performance -->
+            
+        <!--     é para suportar sistemas mais complexos, e trazer mais valor para negócios -->
+        <!--     uso responsável das melhoras tecnologias disponíveis -->
+        <!--     vale para tudo: relacional, orm, etc. -->
+
+        <!--     draw: arquictecute and place people? -->
+        <!--     lean software development -->
+        <!--     can parallelize work -->
+        <!--     speed up, up to 3x? three slices -->
+
+        <!--     - best in domain, recommend functional -->
+
+        <!--     - event handlers for read model, podem ser pessoas menos experientes, custo mais baixo, baixo risco -->
+
+
+        <!--     otherwise, 1 feature ties development across layers -->
+        <!--     nem todos são iguais, maneira de introduzir desenvolvedores em partes mais fáceis, etc. -->
+        <!--     facilita especificação de uma feature -->
+
+            
+        <!--     integration is free, because is built in -->
+        <!--     enable easier TDD -->
+        <!--     contract first mentality -->
+        <!--     less-rework -->
+            
+        <!--     can keep flow in different layers -->
+        <!--     feature injection -->
+        <!--   </div> -->
+        <!-- </div> -->
+        
+
+        
+
+
+        <div class="slide">
+          <header>
+            <h1>It's happening...</h1>
+          </header>          
+          <section class="middle">
+            <img src="images/ericquote.png" />
+            <img src="images/unclebobtweet.png" />
+            <img src="images/evans-tweet-es.png" />
+          </section>
+        </div>
+
+
+        <div class="slide">
+          <section>
+            <blockquote><p>Simplicity is the ultimate sophistication.</p></blockquote>
+            <cite>Leonardo da Vinci</cite>
+          </section>
+
+          <br /><br />           <br /><br />            
+            <img src="images/ars2006-art-complexity.jpg"  style="opacity:0.5"/>
+        </div>
+
+        
+        <div class="slide">
+          <code class="brush: clojure">
+            (end!)
+          </code>
+          <section class="middle">
+            <img src="images/question-mark3a.jpg" />
+          </section>
+        </div>
+
+        
+
+        <div class="slide">
+          <header><h1>references</h1>
+          <h2>incomplete list</h2>
+          </header>
+          <section>
+            <br /><br />
+          <ul>
+            <li><a href="http://clojure.org">http://clojure.org</a></li>
+            <li><a href="http://www.infoq.com/presentations/Are-We-There-Yet-Rich-Hickey">http://www.infoq.com/presentations/Are-We-There-Yet-Rich-Hickey</a></li>
+            <li><a href="http://www.infoq.com/presentations/hickey-clojure">http://www.infoq.com/presentations/hickey-clojure</a></li>
+            <li><a href="http://www.infoq.com/author/Greg-Young">http://www.infoq.com/author/Greg-Young</a></li>
+            <li><a href="http://codebetter.com/blogs/gregyoung/">http://codebetter.com/blogs/gregyoung/</a></li>
+            <li><a href="http://github.com/stuarthalloway/clojure-presentations/">http://github.com/stuarthalloway/clojure-presentations/</a></li>
+            <li><a href="http://cqrsinfo.com">http://cqrsinfo.com</a></li>
+            <li><a href="http://www.codeagle.com/blog/2010/03/10/275/">http://www.codeagle.com/</a> <em>(images from slides 25, 46, 48 and credits for the term "Circular Architecture" and link to <a href="http://alistair.cockburn.us/Hexagonal+architecture">Alistair Cockburn's Hexagonal</a>)</em> </li>            
+            <li><a href="http://www.udidahan.com/">http://www.udidahan.com/</a></li>
+            <li><a href="http://github.com/stuartsierra/lazytest">http://github.com/stuartsierra/lazytest</a></li>
+            <li><a href="http://slides.html5rocks.com/">http://slides.html5rocks.com</a></li>
+          </ul>
+          </section>
+        </div>        
+        
+
+      </div>      
+    </div>
+
+
+
+    
+
+    <script src="presentation.js" type="text/javascript"></script>
+    
+    <!--[if lt IE 9]>
+        <script 
+        src="http://ajax.googleapis.com/ajax/libs/chrome-frame/1/CFInstall.min.js">
+        </script>
+        <script>CFInstall.check({ mode: "overlay" });</script>
+        <![endif]--> 
+
+    <script type="text/javascript">
+
+      var _gaq = _gaq || [];
+      _gaq.push(['_setAccount', 'UA-18535859-1']);
+      _gaq.push(['_trackPageview']);
+
+      (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+      })();
+
+    </script>
+    
+</body>
+
+</html>
